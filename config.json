@@ -1,0 +1,25 @@
+{
+//general
+//mode: 0-original, 1-idiom_length_4, 2-idiom_with_digit, 3-freestyle
+"mode": 1,
+"debug_info": 1,
+"iter_num": 10,
+"no_update_term_num": 500,
+//genetic mutation
+"gene_path_length_init_thresh": 100,
+"gene_path_length_inc_ratio": 0.5,
+"gene_cache_local_mutation_ratio": 0.5,
+//ant colony
+"ant_enable": false,
+"ant_pheromone_min": 1,
+"ant_pheromone_max": 100,
+"ant_pheromone_decay_ratio": 0.5,
+//dfs search
+"search_size_multiplier": 1,
+"instant_search_ratio": 0.01,
+"primary_guard_next_num_thresh": 10,
+//output
+//mode0-4000, mode1-4000, mode2-100, mode3-10
+"write_path_length_thresh": 4000,
+"write_cache_enable": true
+}
