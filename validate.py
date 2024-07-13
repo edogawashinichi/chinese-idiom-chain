@@ -7,7 +7,9 @@ if __name__ == "__main__":
     with open(fname, 'r') as f:
         lines = f.readlines()
         if len(lines) == 2:
-            idioms = lines[1].split("->")[:-1]
+            idioms = lines[1].split("->")
+            if len(idioms[-1]) < 3:
+                idioms = idioms[:-1]
             idioms_set = set(idioms)
             all_connect = True
             for i in range(len(idioms)-1):
@@ -19,6 +21,7 @@ if __name__ == "__main__":
                 print("all connections ok!")
             if len(idioms) == len(idioms_set):
                 print("no duplicate with size: " + str(len(idioms)))
+                print("start: " + idioms[0] + "    end: " + idioms[-1])
             else:
                 print("idioms size: " + str(len(idioms)))
                 print("duplicate size: " + str(len(idioms) - len(idioms_set)))

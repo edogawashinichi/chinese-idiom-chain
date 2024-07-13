@@ -1,9 +1,9 @@
 # State of the Art
 
-|   date   |     mode    | size |
-| -------- | ----------- | ---- |
-| 20240713 | length four | 9627 |
-| 20240707 | length four | 9474 |
+| size |  start  |   end   |   date   |     mode    |
+| ---- | ------- | ------- | -------- | ----------- |
+| 9627 | 泰极而否 | 邦国殄瘁 | 20240713 | length four |
+| 9474 | 手足异处 | 阵马风樯 | 20240707 | length four |
 
 # Background 背景
 
@@ -130,6 +130,9 @@ One result of 0 - original mode
 ## 9474-result-four.txt
 
 One result of 1 - length four mode  
-四字模式目前最好结果
+四字模式的一个运行结果
 
 ## 9627-result-four.txt
+
+Best result of 1 - lenght four mode  
+四字模式的最好结果
