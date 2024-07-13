@@ -32,7 +32,7 @@ Consider each idiom as a node(vertex), and connect an arc(directed edge) between
 项目求解部分采用速度较快的 C++（chain.cpp，依赖 Json 库）  
 验证部分采用 Python（validate.py）  
 
-算法基于：遗传变异算法、蚁群算法、DFS 暴力搜索  
+算法：遗传变异算法、蚁群算法、DFS 暴力搜索  
 其他细节参考具体代码...  
 Algorithm: Genetic Mutation Algorithm, Ant Colony Algorithm, DFS brute force.  
 For more details, refer to the specific code...

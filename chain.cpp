@@ -21,6 +21,9 @@ using MIVI = unordered_map<int, vector<int>>;
 /// large complexity for brute force method
 /// term current root dfs if long time no updating
 
+/// 当前path长度变化率与当前root调用dfs节点数的变化率之间的关系
+/// 支持配置从root开始搜索
+
 #define CIC__UTF8_CHINESE_SIZE 3
 
 #define CIC__RAND_ENV      \
@@ -117,6 +120,10 @@ bool randomChoose(const float ratio) {
     const int second = N - first;
     return randomChoose(first, second);
 }
+PII randomChoose(const float f, const float g, const float h) {
+    const int N = 10000;
+    return randomChoose({0, 1, 2}, {f*N, g*N, h*N});
+}
 
 class CIC {
 protected:
@@ -127,6 +134,7 @@ protected:
     unordered_map<int, int> pheromone_;
     MIVI local_long_path_;
     vector<int> global_long_path_;
+    vector<int> cur_global_long_path_;
 
     int N_;
     int MODE_;
@@ -135,7 +143,8 @@ protected:
     int NO_UPDATE_TERM_NUM_;
     int GENE_PATH_LENGTH_THRESH_;
     float GENE_PATH_LENGTH_INC_RATIO_;
-    float GENE_CACHE_LOCAL_MUTATION_RATIO_;
+    float GENE_CACHE_LOCAL_MUTATION_GLOBAL_RATIO_;
+    float GENE_CACHE_LOCAL_MUTATION_CUR_GLOBAL_RATIO_;
     bool ANT_ENABLE_;
     int ANT_PHEROMONE_MIN_;
     int ANT_PHEROMONE_MAX_;
@@ -217,8 +226,29 @@ protected:
             local_long_path_[key] = val;
             //val.push_back(stoi(line.substr(i, j - i)));
         }
+        trimLocal();
         cout << "read local size: " << local_long_path_.size() << "\n";
+        initCurGlobal();
         return true;
+    }
+    void trimLocal() {
+        MIVI tmp;
+        for (const auto& [key, val] : local_long_path_) {
+            if (val.size() > 1) {
+                tmp[key] = val;
+            }
+        }
+        cout << "trim size: " << (local_long_path_.size() - tmp.size()) << "\n";
+        tmp.swap(local_long_path_);
+    }
+    void initCurGlobal() {
+        cur_global_long_path_ = {0};
+        for (const auto& [key, val] : local_long_path_) {
+            if (val.size() >= GENE_PATH_LENGTH_THRESH_) {
+                cur_global_long_path_ = val;
+                break;
+            }
+        }
     }
     void writeGlobal() {
         if (global_long_path_.size() < WRITE_PATH_LENGTH_THRESH_) return;
@@ -303,8 +333,10 @@ public:
                 vector<int> path;
                 path.push_back(start);
                 dfs(start, path, visited);
-                const int inc_length = local_long_path_.at(start).size() - prev_start_length;
+                visited[start] = 0;
                 if (ANT_ENABLE_) {
+                    const int cur_start_length = local_long_path_.count(start) ? local_long_path_.at(start).size() : 0;
+                    const int inc_length = cur_start_length - prev_start_length;
                     updatePheromone(local_long_path_.at(start), inc_length);
                 }
 
@@ -345,7 +377,10 @@ protected:
     }
     void updateGlobalLongPath(const vector<int>& path) {
         //if(DEBUG_INFO_)cout << "begin global\n";
-        if (path.size() >= global_long_path_.size()) {
+        if (path.size() > cur_global_long_path_.size()) {
+            cur_global_long_path_ = path;
+        }
+        if (path.size() > global_long_path_.size()) {
             debug_dfs_cnt_ = 0;
             global_long_path_ = path;
             writeGlobal();
@@ -356,15 +391,23 @@ protected:
     }
     void updateLocalLongPath(const vector<int>& path) {
         //if(DEBUG_INFO_) cout << "begin local\n";
-        const auto choose_global = randomChoose(GENE_CACHE_LOCAL_MUTATION_RATIO_);
-        const auto& choose_path = choose_global ? global_long_path_ : path;
-        const auto truncate = randomChooseConst(choose_path);
-        if(DEBUG_INFO_)cout << "local truncate=" << truncate.first << "\n";
-        const int truncate_size = choose_path.size() - truncate.first;
+        const float gene_cache_local_ratio = 1.0f - GENE_CACHE_LOCAL_MUTATION_GLOBAL_RATIO_ - GENE_CACHE_LOCAL_MUTATION_CUR_GLOBAL_RATIO_;
+        const auto choose_res = randomChoose(GENE_CACHE_LOCAL_MUTATION_GLOBAL_RATIO_, GENE_CACHE_LOCAL_MUTATION_CUR_GLOBAL_RATIO_, gene_cache_local_ratio);
+        const vector<int>* choose_path = &path;
+        if (0 == choose_res.first) {
+            choose_path = &global_long_path_;
+        } else if (1 == choose_res.first) {
+            choose_path = &cur_global_long_path_;
+        }
+
+        const auto truncate = randomChooseConst(*choose_path);
+        //if(DEBUG_INFO_)cout << "local truncate=" << truncate.first << "\n";
+        const int truncate_size = choose_path->size() - truncate.first;
+        if (truncate_size <= 2) return;
         const int cache_size = (local_long_path_.count(truncate.second)) ? local_long_path_.at(truncate.second).size() : 0;
-        const bool res = randomChoose(truncate_size, cache_size);
+        const bool res = randomChooseSquare(truncate_size, cache_size);
         if (res) {
-            const vector<int> truncate_path(choose_path.begin()+truncate.first, choose_path.end());
+            const vector<int> truncate_path(choose_path->begin()+truncate.first, choose_path->end());
             cout << "update local "; showIdiom(truncate.second);
             cout << " size " << cache_size << "<-" << truncate_size << "\n";
             if (0 == cache_size) ++debug_cache_write_diff_cnt_;
@@ -382,62 +425,90 @@ protected:
         }
         return end_index;
     }
-    void showVisitedL(const vector<int>& visited) {
+    void showVisitedS(const vector<int>& visited) {
         const int cnt = count(visited.begin(), visited.end(), 1);
-        cout << "visited cnt: " << cnt << "/" << N_ << "\n";
+        cout << "visited cnt: " << cnt << "/" << N_ << "  ";
+    }
+    void showVisitedL(const vector<int>& visited) {
+        showVisitedS(visited);
+        cout << "\n";
+    }
+    void showGlobalL() {
+        cout << "global size: " << cur_global_long_path_.size() << "/" << global_long_path_.size() << "\n";
     }
     void dfs(const int cur, vector<int>& path, vector<int>& visited) {
         if (debug_dfs_cnt_ >= NO_UPDATE_TERM_NUM_) return;/// return immediately from the recursive stack
-        if(DEBUG_INFO_){cout << "begin dfs "; showIdiom(cur); showDebugL(); showVisitedL(visited);}
+        if(DEBUG_INFO_){cout << "begin dfs "; showIdiom(cur); showDebugL(); showVisitedS(visited); showGlobalL();}
         ++debug_dfs_cnt_;
         update(path);
         const bool else_flag = randomChoose(INSTANT_SEARCH_RATIO_);
-        bool if_flag = false;
         if (!else_flag && local_long_path_.count(cur)) {
             const int end_index = getUniqueIndex(local_long_path_[cur], path);
-            if (end_index > 1) {
-                cout << "if\n";
-                if_flag = true;
-                ++debug_cache_read_cnt_;
+            if (end_index >= 3) {
+
                 vector<int> unique_vec(local_long_path_[cur].begin()+1, local_long_path_[cur].begin()+end_index);
                 const auto& choice = randomChooseLinear(unique_vec);
-                vector<int> choice_vec(unique_vec.begin(), unique_vec.begin()+choice.first+1);
-                path.insert(path.end(), choice_vec.begin(), choice_vec.end());
-                for (const auto vertex : choice_vec) {
-                    visited[vertex] = 1;
-                }
-                const int next = *(choice_vec.rbegin());
-                dfs(next, path, visited);
-                for (const auto vertex : choice_vec) {
-                    visited[vertex] = 0;
-                    path.pop_back();
-                }
-            }
+                
+                if (choice.first >= 1) {
+                    cout << "if cur "; showIdiomL(cur);
+                    ++debug_cache_read_cnt_;
+
+                    vector<int> choice_vec(unique_vec.begin(), unique_vec.begin()+choice.first+1);
+                    path.insert(path.end(), choice_vec.begin(), choice_vec.end());
+                    for (const auto vertex : choice_vec) {
+                        visited[vertex] = 1;
+                    }
+                    const int next = *(choice_vec.rbegin());
+                    dfs(next, path, visited);
+                    for (const auto vertex : choice_vec) {
+                        visited[vertex] = 0;
+                        path.pop_back();
+                    }
+                }///if choice
+            }///if end index
         } ///if
-        if (else_flag || !if_flag) {
-            cout << "else\n";
+        /// else
+            cout << "else cur "; showIdiomL(cur);
             ++debug_else_cnt_;
 
-            vector<PII> next_pairs;
-            for (const auto next : next_idioms_[cur]) {
-                if (visited[next]) continue;
-                next_pairs.emplace_back(make_pair(next, pheromone_[next]));
-            }///for next
-            //if(DEBUG_INFO_){cout << "next size: " << next_pairs.size() << "\n";}
-            if (0 == next_pairs.size()) {
-                //if(DEBUG_INFO_)cout << "end dfs "; showIdiomL(cur); showDebugL();
-                return;
-            }
-            dsortShuffle(next_pairs, PRIMARY_GUARD_NEXT_NUM_THRESH_);
-            for (const auto& next_pair : next_pairs) {
-                const auto next = next_pair.first;
-                path.push_back(next);
-                visited[next] = 1;
-                dfs(next, path, visited);
-                visited[next] = 0;
-                path.pop_back();
-            }///for next_pair
-        } ///else
+            if (ANT_ENABLE_) {
+                vector<PII> next_pairs;
+                for (const auto next : next_idioms_[cur]) {
+                    if (visited[next]) continue;
+                    next_pairs.emplace_back(make_pair(next, pheromone_[next]));
+                }///for next
+                //if(DEBUG_INFO_){cout << "next size: " << next_pairs.size() << "\n";}
+                if (0 == next_pairs.size()) {
+                    //if(DEBUG_INFO_)cout << "end dfs "; showIdiomL(cur); showDebugL();
+                    return;
+                }
+                dsortShuffle(next_pairs, PRIMARY_GUARD_NEXT_NUM_THRESH_);
+                for (const auto& next_pair : next_pairs) {
+                    const auto next = next_pair.first;
+                    path.push_back(next);
+                    visited[next] = 1;
+                    dfs(next, path, visited);
+                    visited[next] = 0;
+                    path.pop_back();
+                }///for next_pair
+            }///ant enable
+            else {
+                vector<int> nexts;
+                for (const auto next : next_idioms_[cur]) {
+                    if (!visited[next]) {
+                        nexts.push_back(next);
+                    }
+                }
+                shuffle(nexts);
+                for (const auto next : nexts) {
+                    path.push_back(next);
+                    visited[next] = 1;
+                    dfs(next, path, visited);
+                    visited[next] = 0;
+                    path.pop_back();
+                }
+            }///ant disable
+        ///else
         //if(DEBUG_INFO_){cout << "end dfs "; showIdiomL(cur); showDebugL();}
     }///dfs
 
@@ -460,7 +531,7 @@ protected:
                 }
             }///for2
         }///for1
-        cout << "build " << cnt << " connections!\n"; 
+        cout << "build " << cnt << " connections!\n";
     }///build
 
     bool readLastGlobal() {
@@ -568,7 +639,8 @@ protected:
         NO_UPDATE_TERM_NUM_ = root["no_update_term_num"].asInt();
         GENE_PATH_LENGTH_THRESH_ = root["gene_path_length_init_thresh"].asInt();
         GENE_PATH_LENGTH_INC_RATIO_ = root["gene_path_length_inc_ratio"].asFloat();
-        GENE_CACHE_LOCAL_MUTATION_RATIO_ = root["gene_cache_local_mutation_ratio"].asFloat();
+        GENE_CACHE_LOCAL_MUTATION_GLOBAL_RATIO_ = root["gene_cache_local_mutation_global_ratio"].asFloat();
+        GENE_CACHE_LOCAL_MUTATION_CUR_GLOBAL_RATIO_ = root["gene_cache_local_mutation_cur_global_ratio"].asFloat();
         ANT_ENABLE_ = root["ant_enable"].asBool();
         ANT_PHEROMONE_MIN_ = root["ant_pheromone_min"].asInt();
         ANT_PHEROMONE_MAX_ = root["ant_pheromone_max"].asInt();
@@ -634,7 +706,8 @@ protected:
         cout << "no_update_term_num: " << NO_UPDATE_TERM_NUM_ << "\n";
         cout << "gene_path_length_thresh: " << GENE_PATH_LENGTH_THRESH_ << "\n";
         cout << "gene_path_length_inc_ratio: " << GENE_PATH_LENGTH_INC_RATIO_ << "\n";
-        cout << "gene_cache_local_mutation_ratio: " << GENE_CACHE_LOCAL_MUTATION_RATIO_ << "\n";
+        cout << "gene_cache_local_mutation_global_ratio: " << GENE_CACHE_LOCAL_MUTATION_GLOBAL_RATIO_ << "\n";
+        cout << "gene_cache_local_mutation_cur_global_ratio" << GENE_CACHE_LOCAL_MUTATION_CUR_GLOBAL_RATIO_ << "\n";
         cout << "ant_enable: " << ANT_ENABLE_ << "\n";
         cout << "ant_pheromone_min: " << ANT_PHEROMONE_MIN_ << "\n";
         cout << "ant_pheromone_max: " << ANT_PHEROMONE_MAX_ << "\n";
