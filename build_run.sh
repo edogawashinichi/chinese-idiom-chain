@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -f "chain.o" ]; then
-  echo "romove last chain.o"
+  echo "remove last chain.o"
   rm chain.o
 fi
 

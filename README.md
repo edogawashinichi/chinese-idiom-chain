@@ -1,17 +1,18 @@
 # State of the Art
 
-| size |  start  |   end   |   date   |     mode    |
-| ---- | ------- | ------- | -------- | ----------- |
-| 9627 | 泰极而否 | 邦国殄瘁 | 20240713 | length four |
-| 9474 | 手足异处 | 阵马风樯 | 20240707 | length four |
+| size |  start  |   end   |        file         |     mode     |     date    |
+| ---- | ------- | ------- | ------------------- | ------------ | ------------|
+| 9677 | 乐极则忧 | 期期艾艾 | 9677-result-four.txt |  length four |   20240726  |
+| 9627 | 泰极而否 | 邦国殄瘁 | 9627-result-four.txt |  length four |   20240713  |
+| 9474 | 手足异处 | 阵马风樯 | 9474-result-four.txt |  length four |   20240707  |
 
 # Background 背景
 
 The [longest path problem](https://en.wikipedia.org/wiki/Longest_path_problem) in TCS is NP-hard, while the decision version is NP-complete, because it can be reduced to the Hamiltonian path problem, which is proved to be NP-complete.  
 理论计算机科学中最长路径问题是NP难的，而该问题的判定版本是NP完全的，因为它可以规约到哈密顿回路问题，此问题被证明是NP完全的。
 
-The game of Chinese idiom chain is an application of the longest path problem, which is quite popular in traditional Chinese cultural life.  
-成语接龙游戏是最长路径问题的一个应用，在中国传统文化生活中颇为流行。
+An application of the longest path problem is the game of Chinese idiom chain, which is quite popular in traditional Chinese cultural life.  
+最长路径问题的一个应用是成语接龙游戏，这在中国传统文化生活中颇为流行。
 
 # Longest Chinese Idiom Chain 最长成语接龙
 
@@ -133,6 +134,11 @@ One result of 1 - length four mode
 四字模式的一个运行结果
 
 ## 9627-result-four.txt
+
+One result of 1 - lenght four mode  
+四字模式的一个运行结果
+
+## 9677-result-four.txt
 
 Best result of 1 - lenght four mode  
 四字模式的最好结果
