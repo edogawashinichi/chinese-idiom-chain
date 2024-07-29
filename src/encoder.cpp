@@ -10,8 +10,8 @@ bool Encoder::encodeData(const Data& data, Mapper* mapper) {
     return false;
   }
 
-  for (int i = 0; i < data.data_.size(); ++i) {
-    const auto& idiom = (data.data_)[i];
+  for (int i = 0; i < data.idioms_.size(); ++i) {
+    const auto& idiom = (data.idioms_)[i];
     const int code = encode(idiom, i);
     (mapper->idiom2code_)[idiom] = code;
     (mapper->code2idiom_)[code] = idiom;

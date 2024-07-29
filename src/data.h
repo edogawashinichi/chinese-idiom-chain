@@ -14,7 +14,7 @@ using std::string;
 
 class Data {
 public:
-  vector<string> data_;
+  vector<string> idioms_;
 };/// class Data
 
 }/// namespace ChineseIdiomChain

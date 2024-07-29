@@ -33,7 +33,7 @@ bool Reader::readData(const string& file, Data* data) {
   }
 
   for (const auto& obj : root) {
-    data->data_.emplace_back(obj["word"].asString());
+    data->idioms_.emplace_back(obj["word"].asString());
   }
   //INFO_MSG("readData succeed!");
   return true;
