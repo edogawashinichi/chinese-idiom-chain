@@ -4,18 +4,16 @@
 
 #pragma once
 
-#include <unordered_map>
-#include <vector>
+#include "common_notation.h"
 
 namespace ChineseIdiomChain {
 
-using std::unordered_map;
-using std::vector;
-
-using VI = vector<int>;
-using MIVI = unordered_map<int, VI>;
-
 class Graph {
+public:
+  Graph() = default;
+  Graph(const string& file);
+  void show() const;
+
 public:
   VI vertices_;
   MIVI successors_;

@@ -1,7 +1,6 @@
 /// filter.cpp
 
 #include "filter.h"
-#include "common_const.h"
 
 namespace ChineseIdiomChain {
 

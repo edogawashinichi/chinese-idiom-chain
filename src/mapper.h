@@ -4,23 +4,17 @@
 
 #pragma once
 
-#include <unordered_map>
-#include <string>
+#include "common_notation.h"
 
 namespace ChineseIdiomChain {
-
-using std::unordered_map;
-using std::string;
-using std::pair;
-
-using MSI = unordered_map<string, int>;
-using MIS = unordered_map<int, string>;
-using PIS = pair<int, string>;
 
 class Mapper {
 public:
   MSI idiom2code_;
   MIS code2idiom_;
+public:
+  Mapper() = default;
+  Mapper(const string& file);
 };/// class Mapper
 
 }/// namespace ChineseIdiomChain

@@ -24,8 +24,9 @@ if [ -f ${obj_file} ]; then
   rm ${obj_file}
 fi
 
+src_path="../src/"
 # gtest requires at least C++14
-g++ -ljsoncpp -std=c++17 -o ${obj_file} -cpp ${test_file} ${test_path}reader.cpp ${test_path}encoder.cpp ${test_path}builder.cpp ${test_path}filter.cpp ${test_path}common_math.cpp
+g++ -ljsoncpp -std=c++17 -o ${obj_file} -cpp ${test_file} ${src_path}reader.cpp ${src_path}encoder.cpp ${src_path}builder.cpp ${src_path}filter.cpp ${src_path}common_math.cpp ${src_path}writer.cpp ${src_path}solver.cpp ${src_path}mapper.cpp ${src_path}graph.cpp ${src_path}solver_naive.cpp ${src_path}path.cpp
 ./${obj_file}
 
 echo "end running..."

@@ -1,44 +1,54 @@
 /// reader.cpp
 
 #include "reader.h"
-#include <jsoncpp/json/json.h>
-#include <fstream>
 
 namespace ChineseIdiomChain {
 
-using std::ifstream;
-using std::ios;
-
 bool Reader::readData(const string& file, Data* data) {
-  if (nullptr == data) {
-    /// TODO
-    // DEBUG_MSG();
-    return false;
-  }  
-
-  ifstream in(file, ios::binary);
-  if (!in.is_open()) {
-    /// TODO
-    // implement a simple log manager
-    // DEBUG_MSG();
-    /// cout << "Error opening " << file << "!\n";
-    return false;
-  }
-  Json::Reader reader;
-  Json::Value root;
-  if (!reader.parse(in, root)) {
-    /// TODO
-    /// cout << "Error parse " << file << "!\n";
-    return false;
-  }
+  CIC__READ_JSON_START(data)
 
   for (const auto& obj : root) {
     data->idioms_.emplace_back(obj["word"].asString());
   }
-  //INFO_MSG("readData succeed!");
-  return true;
+
+  CIC__READ_JSON_END
 }/// Reader::readData
 
+bool Reader::loadMapper(const string& file, Mapper* mapper) {
+  CIC__READ_JSON_START(mapper)
+  
+  for (const auto& obj : root) {
+    const string& idiom(obj["idiom"].asString());
+    const int code = obj["code"].asInt();
+    (mapper->idiom2code_)[idiom] = code;
+    (mapper->code2idiom_)[code] = idiom;
+  }
+
+  CIC__READ_JSON_END
+}/// Reader::loadMapper
+
+bool Reader::loadGraph(const string& file, Graph* graph) {
+  CIC__READ_JSON_START(graph)
+  
+  (graph->vertices_).clear();
+  (graph->vertices_).reserve(root["vertices"].size());
+  for (const auto& vertex : root["vertices"]) {
+    (graph->vertices_).push_back(vertex.asInt());
+  }
+
+  (graph->predecessors_).clear();
+  (graph->successors_).clear();
+  for (const auto& obj : root["predecessors"]) {
+    const int cur = obj["cur"].asInt();
+    (graph->predecessors_)[cur].reserve(obj["pres"].size());
+    for (const auto& pre : obj["pres"]) {
+      const int p = pre.asInt();
+      (graph->predecessors_)[cur].push_back(p);
+      (graph->successors_)[p].push_back(cur);
+    }
+  }
+
+  CIC__READ_JSON_END
+}/// Reader::loadGraph
+
 }/// namespace ChineseIdiomChain
-
-

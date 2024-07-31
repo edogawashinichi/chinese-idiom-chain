@@ -1,8 +1,9 @@
 /// test_filter.cpp
 
-#include "common_header.h"
+#include "common_test_header.h"
 
 void test_1() {
+  TEST_SEPAR(1)
   const int EXP = 29502;
   const string file(DATA_FILE);
   Reader reader;
@@ -19,13 +20,12 @@ void test_1() {
   cout << "code2idiom size: " << code2idiom.size() << "\n";
   if (EXP != idiom2code.size() || EXP != code2idiom.size()) {
     cout << "EXP: " << EXP << "\n";
-    cout << "test_1 FAILED!\n";
-  } else {
-    cout << "test_1 PASSED!\n";
+    FAIL_INFO_RET(1)
   }
+  PASS_INFO(1)
+  TEST_SEPAR(1)
 }/// test_1
 
-int main(int argc, char* argv[]) {
-  test_1();
-  return 0;
-}
+MAIN_START
+test_1();
+MAIN_END

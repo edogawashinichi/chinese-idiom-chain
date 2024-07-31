@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "common_notation.h"
 #include "filter.h"
 #include "graph.h"
 

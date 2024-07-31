@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "common_notation.h"
 #include "data.h"
 #include "mapper.h"
 

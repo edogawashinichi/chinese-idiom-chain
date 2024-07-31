@@ -1,8 +1,9 @@
 /// test_encoder.cpp
 
-#include "common_header.h"
+#include "common_test_header.h"
 
 void test_1() {
+  TEST_SEPAR(1)
   const string file(DATA_FILE);
   Reader reader;
   Data data;
@@ -10,16 +11,13 @@ void test_1() {
   Encoder encoder;
   Mapper mapper;
   if (false == encoder.encodeData(data, &mapper)) {
-    cout << "test_1 FAILED!\n";
-    return;
+    FAIL_INFO_RET(1)
   }
 
   cout << "idiom2code size: " << mapper.idiom2code_.size() << "\n";
   cout << "code2idiom size: " << mapper.code2idiom_.size() << "\n";
   if (mapper.idiom2code_.size() != mapper.code2idiom_.size()) {
-    cout << "SIZE NOT EQUAL!\n";
-    cout << "test_1 FAILED!\n";
-    return;
+    FAIL_INFO_RET(1)
   }
 
   for (const auto& kv : mapper.idiom2code_) {
@@ -27,15 +25,14 @@ void test_1() {
     const int code = kv.second;
     if (mapper.code2idiom_[code] != idiom) {
       cout << idiom << " -> " << code << " -> " << mapper.code2idiom_[code] << "\n";
-      cout << "test_1 FAILED!\n";
-      return;
+      FAIL_INFO_RET(1)
     }/// if
   }/// for
 
-  cout << "test_1 PASSED!\n";
+  PASS_INFO(1)
+  TEST_SEPAR(2)
 }/// test_1
 
-int main(int argc, char* argv[]) {
-  test_1();
-  return 0;
-}
+MAIN_START
+test_1();
+MAIN_END

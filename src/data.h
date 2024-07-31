@@ -4,17 +4,13 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
+#include "common_notation.h"
 
 namespace ChineseIdiomChain {
 
-using std::vector;
-using std::string;
-
 class Data {
 public:
-  vector<string> idioms_;
+  VS idioms_;
 };/// class Data
 
 }/// namespace ChineseIdiomChain
