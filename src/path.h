@@ -9,12 +9,15 @@ namespace ChineseIdiomChain {
 
 class Path {
 public:
-  VI codes_;
+  VI codes_;/// consider double link list for searching
 public:
   Path() = default;
   Path(const VI&);
   void assign(const VI&);
-
+  inline int size() const {
+    return codes_.size();
+  }
+  
   void show(const Mapper& mapper) const;
 };/// class Path
 

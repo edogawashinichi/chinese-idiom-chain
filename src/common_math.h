@@ -29,5 +29,13 @@ int randomChoose(const VI& vec);
 /* randomly choose an element from vector vec with frequency freq */
 int randomChoose(const VI& vec, const VI& freq);
 
+/// shuffle vector
+
+void shuffle(VI& v);
+
+/// bet
+
+bool bet(const float prob);
+
 }/// namespace ChineseIdiomChain
 

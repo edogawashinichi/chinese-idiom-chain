@@ -20,6 +20,8 @@ public:
   MIVI predecessors_;
 
 public:
+  int maxVertex() const;
+
   inline int order() const {
     return vertices_.size();
   }

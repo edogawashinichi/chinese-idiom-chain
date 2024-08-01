@@ -18,6 +18,9 @@ public:
   void showSolution() const;
 
 protected:
+  bool updateSolution(const VI& path);
+
+protected:
   unique_ptr<Mapper> mapper_;
   unique_ptr<Graph> graph_;
 

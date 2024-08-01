@@ -6,9 +6,12 @@
 #include <numeric>
 #include <random>
 
-#define CIC__RAND_ENV(sum, res) \
+#define CIC__RAND_ENV(rng) \
 std::random_device rd;\
-std::mt19937 rng(rd());\
+std::mt19937 rng(rd());
+
+#define CIC__DISTR_ENV(sum, res) \
+CIC__RAND_ENV(rng)\
 std::uniform_int_distribution<int> distr(0, sum - 1);\
 const int res = distr(rng);
 
@@ -48,7 +51,7 @@ int randomChoose(const VI& vec, const VI& freq) {
     const int sum = accumulate(freq.begin(), freq.end(), 0);
     if (sum < 1) return -1;
 
-    CIC__RAND_ENV(sum, res)
+    CIC__DISTR_ENV(sum, res)
 
     int index = 0, prev_sum = 0;
     for (; index < vec.size(); ++index) {
@@ -57,5 +60,17 @@ int randomChoose(const VI& vec, const VI& freq) {
     }
     return index;
 }/// randomChoose
+
+void shuffle(VI& v) {
+  CIC__RAND_ENV(rng)
+  shuffle(v.begin(), v.end(), rng);
+}/// shuffle
+
+bool bet(const float prob) {
+  const int N = 10000;
+  const int first = N * prob;
+  const int second = N - first;
+  return 0 == randomChoose({0, 1}, {first, second});
+}
 
 }/// namespace ChineseIdiomChain
