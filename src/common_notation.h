@@ -2,8 +2,14 @@
 
 #pragma once
 
+/*
 #ifndef CIC__DEBUG_INFO
 #define CIC__DEBUG_INFO
+#endif
+*/
+
+#ifdef CIC__DEBUG_INFO
+#undef CIC__DEBUG_INFO
 #endif
 
 #define MAIN_START \
@@ -15,6 +21,8 @@ return 0;\
 #define STR(s) #s
 #define STR_VAR_L(s) \
 cout << STR(s) << ": " << s << "\n";
+#define STR_VAR_LL(s, t) \
+cout << STR(s) << ":" << s << "  " << STR(t) << ":" << t << "\n";
 #define TEST_SEPAR(i) \
 cout << "\033[34m---------\033[0m" << STR(test_##i) << "\033[34m---------\033[0m\n";
 #define FAIL_INFO_RET(i) \
@@ -54,6 +62,7 @@ out.close();\
 return true;
 
 #include <vector>
+#include <list>
 #include <unordered_map>
 #include <iostream>
 #include <string>
@@ -63,10 +72,12 @@ return true;
 
 using std::string;
 using std::vector;
+using std::list;
 using std::unordered_map;
 using std::pair;
 using VS = vector<string>;
 using VI = vector<int>;
+using LI = list<int>;
 using MSI = unordered_map<string, int>;
 using MIS = unordered_map<int, string>;
 using PIS = pair<int, string>;

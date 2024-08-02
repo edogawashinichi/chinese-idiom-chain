@@ -9,7 +9,7 @@ namespace ChineseIdiomChain {
 
 Graph::Graph(const string& file) {
   Reader reader;
-  reader.loadGraph(file, this);
+  reader.loadGraph(file, this);/// need to thow an error if failed
 }/// Graph::Graph
 
 int Graph::maxVertex() const {

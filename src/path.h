@@ -9,13 +9,14 @@ namespace ChineseIdiomChain {
 
 class Path {
 public:
-  VI codes_;/// consider double link list for searching
+  ///VI vertices_;/// consider double link list for searching
+  LI vertices_;
 public:
   Path() = default;
-  Path(const VI&);
-  void assign(const VI&);
+  Path(const LI&);
+  void assign(const LI&);
   inline int size() const {
-    return codes_.size();
+    return vertices_.size();
   }
   
   void show(const Mapper& mapper) const;

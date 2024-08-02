@@ -18,7 +18,7 @@ public:
   void showSolution() const;
 
 protected:
-  bool updateSolution(const VI& path);
+  bool updateSolution(const LI& path);
 
 protected:
   unique_ptr<Mapper> mapper_;

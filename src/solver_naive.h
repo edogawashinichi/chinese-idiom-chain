@@ -14,11 +14,11 @@ public:
 
 protected:
   void runOnce();
-  void biDFS(VI& path, VI& visited);
+  void biDFS(LI& path, VI& visited);
   void getUnvisitedPredecessors(const int vertex, const VI& visited, VI* predecessors) const;
   void getUnvisitedSuccessors(const int vertex, const VI& visited, VI* successors) const;
-  void extendFront(VI& predecessors, VI& path, VI& visited) const;
-  void extendBack(VI& successors, VI& path, VI& visited) const;
+  void extendFront(const VI& predecessors, LI& path, VI& visited) const;
+  void extendBack(const VI& successors, LI& path, VI& visited) const;
 };
 
 }/// namespace ChineseIdiomChain

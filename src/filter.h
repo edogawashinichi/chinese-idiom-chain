@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include "common_notation.h"
-#include "common_const.h"
 #include "Mapper.h"
 
 namespace ChineseIdiomChain {

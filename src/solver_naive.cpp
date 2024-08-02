@@ -21,9 +21,7 @@ SolverNaive::SolverNaive(const string& mapper_file, const string& graph_file)
 void SolverNaive::run() {
   const int T = 100000;
   for (int t = 0; t < T; ++t) {
-    #ifdef CIC__DEBUG_INFO
-      STR_VAR_L(t)
-    #endif
+    STR_VAR_LL(t, best_path_.size())
     runOnce();
   }
 }/// SolverNaive::run
@@ -38,14 +36,17 @@ void SolverNaive::runOnce() {
     STR_VAR_L(start_idiom)
   #endif
   
-  VI path = {start_vertex};
+  LI path = {start_vertex};
   const int N = graph_->maxVertex() + 1;
   VI visited(N, 0);
   visited[start_vertex] = 1;
   biDFS(path, visited);
 }/// SolverNaive::runOnce
 
-void SolverNaive::biDFS(VI& path, VI& visited) {
+void SolverNaive::biDFS(LI& path, VI& visited) {
+  #ifdef CIC__DEBUG__INFO
+    cout << "start biDFS path size: " << path.size() << "\n";
+  #endif
   VI frontUnvPreds;
   getUnvisitedPredecessors(path.front(), visited, &frontUnvPreds);
   VI backUnvSuccs;
@@ -72,16 +73,16 @@ void SolverNaive::biDFS(VI& path, VI& visited) {
   biDFS(path, visited);
 }/// SolverNaive::biDFS
 
-void SolverNaive::extendFront(VI& predecessors, VI& path, VI& visited) const {
-  shuffle(predecessors);
-  const auto pred = predecessors.front();
-  path.emplace(path.begin(), pred);/// TODO: low efficiency
+void SolverNaive::extendFront(const VI& predecessors, LI& path, VI& visited) const {
+  const int index = randomChoose(predecessors);
+  const int pred = predecessors[index];
+  path.emplace_front(pred);
   visited[pred] = 1;
 }/// SolverNaive::extendFront
 
-void SolverNaive::extendBack(VI& successors, VI& path, VI& visited) const {
-  shuffle(successors);
-  const auto succ = successors.front();
+void SolverNaive::extendBack(const VI& successors, LI& path, VI& visited) const {
+  const int index = randomChoose(successors);
+  const int succ = successors[index];
   path.emplace_back(succ);
   visited[succ] = 1;
 }/// SolverNaive::extendBack

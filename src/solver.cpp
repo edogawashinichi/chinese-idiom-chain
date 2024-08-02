@@ -4,17 +4,15 @@
 
 namespace ChineseIdiomChain {
 
-using std::make_unique;
-
 Solver::Solver(const string& mapper_file, const string& graph_file) 
 : mapper_(nullptr), graph_(nullptr) {
   mapper_ = make_unique<Mapper>(mapper_file);
   graph_ = make_unique<Graph>(graph_file);
 }/// Solver::Solver
 
-bool Solver::updateSolution(const VI& path) {
+bool Solver::updateSolution(const LI& path) {
   if (path.size() < best_path_.size()) return false;
-  best_path_ = path;
+  best_path_.assign(path);
   return true;
 }/// Solver::update
 

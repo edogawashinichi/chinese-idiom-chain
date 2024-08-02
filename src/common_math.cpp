@@ -68,9 +68,9 @@ void shuffle(VI& v) {
 
 bool bet(const float prob) {
   const int N = 10000;
-  const int first = N * prob;
-  const int second = N - first;
-  return 0 == randomChoose({0, 1}, {first, second});
+  const int f0 = N * prob;
+  const int f1 = N - f0;
+  return 0 == randomChoose({0, 1}, {f0, f1});
 }
 
 }/// namespace ChineseIdiomChain

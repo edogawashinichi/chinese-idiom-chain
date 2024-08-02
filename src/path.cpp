@@ -4,18 +4,18 @@
 
 namespace ChineseIdiomChain {
 
-Path::Path(const VI& vec) : codes_(vec) {
-}
+Path::Path(const LI& list) : vertices_(list) {
+}/// Path::Path
 
-void Path::assign(const VI& vec) {
-  codes_ = vec;
+void Path::assign(const LI& list) {
+  vertices_ = list;
 }/// Path::assign
 
 void Path::show(const Mapper& mapper) const {
-  for (const auto code : codes_) {
-    cout << mapper.code2idiom_.at(code) << "  ";
+  for (const auto vertex : vertices_) {
+    cout << mapper.code2idiom_.at(vertex) << "  ";
   }
-  cout << "\nsize: " << codes_.size() << "\n";
+  cout << "\nsize: " << vertices_.size() << "\n";
 }/// Path::show
 
 }/// namespace ChineseIdiomChain
