@@ -18,6 +18,7 @@ public:
   void showSolution() const;
 
 protected:
+  bool readConfig();
   bool updateSolution(const LI& path);
 
 protected:

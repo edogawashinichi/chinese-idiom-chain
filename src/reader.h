@@ -10,6 +10,7 @@
 #include "data.h"
 #include "Mapper.h"
 #include "Graph.h"
+#include "Solver.h"
 
 namespace ChineseIdiomChain {
 
@@ -18,6 +19,7 @@ public:
   bool readData(const string& file, Data* data);
   bool loadMapper(const string& file, Mapper* mapper);
   bool loadGraph(const string& file, Graph* graph);
+  bool readConfig(const string& file, Solver* solver);
 };
 
 }/// namespace ChineseIdiomChain

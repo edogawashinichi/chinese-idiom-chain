@@ -31,7 +31,7 @@ return;
 #define PASS_INFO(i) \
 cout << STR(test_##i) << " \033[32mPASSED\033[0m!\n";
 
-#define CIC__READ_JSON_START(ptr) \
+#define CIC__READ_JSON_START(ptr, in, root) \
 if (nullptr == ptr) {\
   return false;\
 }\
@@ -44,8 +44,7 @@ Json::Value root;\
 if (!reader.parse(in, root)) {\
   return false;\
 }
-
-#define CIC__READ_JSON_END \
+#define CIC__READ_JSON_END(in) \
 in.close();\
 return true;
 

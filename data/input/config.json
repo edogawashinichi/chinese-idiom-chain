@@ -1,6 +1,7 @@
 {
-//general
-//mode: 0-original, 1-idiom_length_4, 2-idiom_with_digit, 3-freestyle
+// SolverNaive
+"solver_naive_iter_num": 10000,
+//v0
 "mode": 1,
 "debug_info": 0,
 "iter_num": 20,

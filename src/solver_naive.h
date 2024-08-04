@@ -19,6 +19,13 @@ protected:
   void getUnvisitedSuccessors(const int vertex, const VI& visited, VI* successors) const;
   void extendFront(const VI& predecessors, LI& path, VI& visited) const;
   void extendBack(const VI& successors, LI& path, VI& visited) const;
+
+protected:
+  int iter_num_;
+public:
+  inline void setIterNum(const int n) {
+    iter_num_ = n;
+  }
 };
 
 }/// namespace ChineseIdiomChain

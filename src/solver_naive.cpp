@@ -15,12 +15,12 @@ void SolverNaive::getUnvisited##Some(const int vertex, const VI& visited, VI* so
 namespace ChineseIdiomChain {
 
 SolverNaive::SolverNaive(const string& mapper_file, const string& graph_file)
-: Solver(mapper_file, graph_file) {
-}
+: Solver(mapper_file, graph_file), iter_num_(1) {
+  this->readConfig();
+}/// SolverNaive::SolverNaive
 
 void SolverNaive::run() {
-  const int T = 100000;
-  for (int t = 0; t < T; ++t) {
+  for (int t = 0; t < iter_num_; ++t) {
     STR_VAR_LL(t, best_path_.size())
     runOnce();
   }

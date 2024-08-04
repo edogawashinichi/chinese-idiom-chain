@@ -13,6 +13,7 @@ const string INPUT_DIR("../data/input/");
 const string CACHE_DIR("../data/cache/");
 const string OUTPUT_DIR("../data/output/");
 const string DATA_FILE("../data/input/data.json");
+const string CONFIG_FILE("../data/input/config.json");
 const string MAPPER_FILE("../data/cache/mapper.json");
 const string GRAPH_FILE("../data/cache/graph.json");
 const string RESULT_FILE("../data/output/result.json");
