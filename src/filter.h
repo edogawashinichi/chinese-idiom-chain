@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Mapper.h"
+#include "mapper.h"
 
 namespace ChineseIdiomChain {
 

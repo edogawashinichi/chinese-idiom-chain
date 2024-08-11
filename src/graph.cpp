@@ -5,6 +5,15 @@
 
 #include <algorithm>
 
+#define CIC__FUNC_GET_UNVISITED(Some, some) \
+void Graph::getUnvisited##Some(const int vertex, const VI& visited, VI* some) const {\
+  if (! some##_.count(vertex)) return;\
+  for (const auto v : some##_.at(vertex)) {\
+    if (visited[v]) continue;\
+    some->emplace_back(v);\
+  }\
+}
+
 namespace ChineseIdiomChain {
 
 Graph::Graph(const string& file) {
@@ -15,6 +24,9 @@ Graph::Graph(const string& file) {
 int Graph::maxVertex() const {
   return *(std::max_element(vertices_.begin(), vertices_.end())); 
 }/// Graph::maxVertexCode
+
+CIC__FUNC_GET_UNVISITED(Successors, successors)
+CIC__FUNC_GET_UNVISITED(Predecessors, predecessors)
 
 void Graph::show() const {
   cout << "graph:\n";

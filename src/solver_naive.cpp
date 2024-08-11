@@ -3,27 +3,21 @@
 #include "solver_naive.h"
 #include "common_math.h"
 
-#define CIC__FUNC_GET_UNVISITED(Some, some) \
-void SolverNaive::getUnvisited##Some(const int vertex, const VI& visited, VI* some) const {\
-  if (! (graph_->some##_).count(vertex)) return;\
-  for (const auto v : (graph_->some##_).at(vertex)) {\
-    if (visited[v]) continue;\
-    some->emplace_back(v);\
-  }\
-}
-
 namespace ChineseIdiomChain {
 
 SolverNaive::SolverNaive(const string& mapper_file, const string& graph_file)
-: Solver(mapper_file, graph_file), iter_num_(1) {
+: Solver(mapper_file, graph_file) {
+  iter_num_ = 1;
   this->readConfig();
 }/// SolverNaive::SolverNaive
 
 void SolverNaive::run() {
   for (int t = 0; t < iter_num_; ++t) {
-    STR_VAR_LL(t, best_path_.size())
+    STR_VAR_2_L(t, best_path_.size())
     runOnce();
   }
+  showSolution();
+  writeSolution();
 }/// SolverNaive::run
 
 void SolverNaive::runOnce() {
@@ -48,9 +42,9 @@ void SolverNaive::biDFS(LI& path, VI& visited) {
     cout << "start biDFS path size: " << path.size() << "\n";
   #endif
   VI frontUnvPreds;
-  getUnvisitedPredecessors(path.front(), visited, &frontUnvPreds);
+  graph_->getUnvisitedPredecessors(path.front(), visited, &frontUnvPreds);
   VI backUnvSuccs;
-  getUnvisitedSuccessors(path.back(), visited, &backUnvSuccs);
+  graph_->getUnvisitedSuccessors(path.back(), visited, &backUnvSuccs);
   if (frontUnvPreds.empty() && backUnvSuccs.empty()) {
     updateSolution(path);
     return;
@@ -86,8 +80,5 @@ void SolverNaive::extendBack(const VI& successors, LI& path, VI& visited) const 
   path.emplace_back(succ);
   visited[succ] = 1;
 }/// SolverNaive::extendBack
-
-CIC__FUNC_GET_UNVISITED(Predecessors, predecessors)
-CIC__FUNC_GET_UNVISITED(Successors, successors)
 
 }/// namespace ChineseIdiomChain

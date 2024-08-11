@@ -18,10 +18,12 @@ public:
   VI vertices_;
   MIVI successors_;
   MIVI predecessors_;
-
 public:
   int maxVertex() const;
+  void getUnvisitedSuccessors(const int vertex, const VI& visited, VI* successors) const;
+  void getUnvisitedPredecessors(const int vertex, const VI& visited, VI* predecessors) const;
 
+public:
   inline int order() const {
     return vertices_.size();
   }

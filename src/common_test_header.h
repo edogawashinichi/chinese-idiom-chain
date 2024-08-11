@@ -16,6 +16,7 @@
 #include "writer.h"
 #include "solver.h"
 #include "solver_naive.h"
+#include "solver_gene.h"
 
 using ChineseIdiomChain::Reader;
 using ChineseIdiomChain::Data;
@@ -27,6 +28,7 @@ using ChineseIdiomChain::Graph;
 using ChineseIdiomChain::Writer;
 using ChineseIdiomChain::Solver;
 using ChineseIdiomChain::SolverNaive;
+using ChineseIdiomChain::SolverGene;
 
 using ChineseIdiomChain::DATA_FILE;
 using ChineseIdiomChain::MAPPER_FILE;
@@ -36,3 +38,5 @@ using ChineseIdiomChain::isEqual;
 using ChineseIdiomChain::linearVec;
 using ChineseIdiomChain::idVec;
 using ChineseIdiomChain::randomChoose;
+using ChineseIdiomChain::split16bits;
+using ChineseIdiomChain::composite16bits;

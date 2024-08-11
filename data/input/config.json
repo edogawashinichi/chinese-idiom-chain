@@ -1,6 +1,13 @@
 {
 // SolverNaive
 "solver_naive_iter_num": 10000,
+// SolverGene
+"solver_gene_iter_num": 3,
+"solver_gene_seeds_capacity": 8,
+"solver_gene_recovery_ratio": 0.1,
+"solver_gene_search_ratio": 0.1,
+"solver_gene_extension_size": 5,
+"solver_gene_snippets_energy": 7,
 //v0
 "mode": 1,
 "debug_info": 0,

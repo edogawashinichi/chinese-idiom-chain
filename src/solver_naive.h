@@ -1,5 +1,7 @@
 /// solver_naive.h
 
+/// derived class from class Solver, using naive method
+
 #pragma once
 
 #include "common_notation.h"
@@ -15,8 +17,6 @@ public:
 protected:
   void runOnce();
   void biDFS(LI& path, VI& visited);
-  void getUnvisitedPredecessors(const int vertex, const VI& visited, VI* predecessors) const;
-  void getUnvisitedSuccessors(const int vertex, const VI& visited, VI* successors) const;
   void extendFront(const VI& predecessors, LI& path, VI& visited) const;
   void extendBack(const VI& successors, LI& path, VI& visited) const;
 

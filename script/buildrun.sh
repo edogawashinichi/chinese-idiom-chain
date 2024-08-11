@@ -26,7 +26,8 @@ fi
 
 src_path="../src/"
 # gtest requires at least C++14
-g++ -ljsoncpp -std=c++17 -o ${obj_file} -cpp ${test_file} ${src_path}reader.cpp ${src_path}encoder.cpp ${src_path}builder.cpp ${src_path}filter.cpp ${src_path}common_math.cpp ${src_path}writer.cpp ${src_path}solver.cpp ${src_path}mapper.cpp ${src_path}graph.cpp ${src_path}solver_naive.cpp ${src_path}path.cpp
+# O2 optmization may modify primary output, turn off for debug purpose
+g++ -ljsoncpp -std=c++17 -o ${obj_file} -cpp ${test_file} ${src_path}reader.cpp ${src_path}encoder.cpp ${src_path}builder.cpp ${src_path}filter.cpp ${src_path}common_math.cpp ${src_path}writer.cpp ${src_path}solver.cpp ${src_path}mapper.cpp ${src_path}graph.cpp ${src_path}solver_naive.cpp ${src_path}path.cpp ${src_path}solver_gene.cpp ${src_path}pool.cpp ${src_path}pool_forward.cpp ${src_path}pool_backward.cpp ${src_path}population.cpp
 ./${obj_file}
 
 echo "end running..."
