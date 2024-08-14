@@ -7,14 +7,8 @@
 namespace ChineseIdiomChain {
 
 void PoolForward::load(const string& file) {
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start PoolForward::load")
-  #endif
   Reader reader;
   reader.loadSnippetsForward(file, &end2path_);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish PoolForward::load")
-  #endif
 }/// PoolForward::load
 
 void PoolForward::update(const LI& path) {

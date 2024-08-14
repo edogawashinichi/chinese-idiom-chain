@@ -18,21 +18,9 @@ Solver(mapper_file, graph_file), seeds_(nullptr), snippets_forward_(nullptr), sn
   snippets_forward_ = make_unique<PoolForward>();
   snippets_backward_ = make_unique<PoolBackward>();
   this->readConfig();/// derived ptr can penetrate to base function
-  #ifdef CIC__DEBUG_INFO
-    STR_L("readConfig ok")
-  #endif
   loadSeeds();
-  #ifdef CIC__DEBUG_INFO
-    STR_L("loadSeeds ok")
-  #endif
   loadSnippetsForward();
-  #ifdef CIC__DEBUG_INFO
-    STR_L("loadSnippetsForward ok")
-  #endif
   loadSnippetsBackward();
-  #ifdef CIC__DEBUG_INFO
-    STR_L("SolverGene::SolverGene ok")
-  #endif
 }/// SolverGene::SolverGene
 
 void SolverGene::run() {
@@ -50,34 +38,14 @@ void SolverGene::runOnce() {
   /// random candidate with random clip
   /// memoBiDFS(candidate)
 
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start runOnce")
-  #endif
-
   LI path;
   VI visited(graph_->maxVertex() + 1, 0);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("graph_ ok")
-  #endif
   const int C = seeds_->capacity_ + 1;
-    STR_L("seeds_ ok")
   const int index = randomChoose(idVec(C));
   if (index != C - 1) {
-    #ifdef CIC__DEBUG_INFO
-      STR_VAR_L(visited.size())
-      STR_VAR_L(C)
-      STR_VAR_L(index)
-    #endif
     const int sz = (seeds_->communities_)[index]->size();
     if (sz != 0) {
-      #ifdef CIC__DEBUG_INFO
-        STR_VAR_L(sz)
-      #endif
       const auto pair = randomChooseSub(idVec(sz));
-      #ifdef CIC__DEBUG_INFO
-        STR_VAR_L(pair.first)
-        STR_VAR_L(pair.second)
-      #endif
       LI::iterator it_start = (seeds_->communities_)[index]->begin();
       std::advance(it_start, pair.first);
       LI::iterator it_end = (seeds_->communities_)[index]->begin();
@@ -86,122 +54,56 @@ void SolverGene::runOnce() {
       for (const auto vertex : path) {
         visited[vertex] = 1;
       }/// for path
-      #ifdef CIC__DEBUG_INFO
-        STR_VAR_L(path.size())
-      #endif
     }/// if sz != 0
   }/// if index != C - 1
 
   if (path.size() == 0) {
-    #ifdef CIC__DEBUG_INFO
-      STR_L("path size 0")
-    #endif
     const int index = randomChoose(graph_->order());/// order: vertex size; size: edge size
-    #ifdef CIC__DEBUG_INFO
-      STR_VAR_L(index)
-    #endif
     const int vertex = (graph_->vertices_)[index];
-    #ifdef CIC__DEBUG_INFO
-      STR_VAR_L(vertex)
-    #endif
     path.emplace_back(vertex);
     visited[vertex] = 1;
   }
 
-  #ifdef CIC__DEBUG_INFO
-    STR_VAR_L(path.front());
-  #endif
-
   memoBiDFS(path, visited);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("runOnce finish memoBiDFS")
-  #endif
   
   cacheSeeds();
-  #ifdef CIC__DEBUG_INFO
-    STR_L("runOnce finish cacheSeeds")
-  #endif
   cacheSnippetsForward();
-  #ifdef CIC__DEBUG_INFO
-    STR_L("runOnce finish cacheSnippetsForward")
-  #endif
   cacheSnippetsBackward(); 
 
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish runOne")
-  #endif
 }/// SolverGene::runOnce
 
 void SolverGene::memoBiDFS(LI& path, VI& visited) {
   /// condition -> immediately return from recursive stack
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start memoBiDFS")
-  #endif
 
-  #ifdef CIC__DEBUG_INFO
     const int visited_cnt = std::count(visited.begin(), visited.end(), 1);
     STR_VAR_2_L(path.size(), visited_cnt)
-  #endif
 
   updateSolution(path);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("updateSolution ok")
-  #endif
   updateSeeds(path);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("updateSeeds ok")
-  #endif
   updateSnippets(path);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("updateSnippets ok")
-  #endif
 
   VI unvisitedPredecessors;
   graph_->getUnvisitedPredecessors(path.front(), visited, &unvisitedPredecessors);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("graph get unvisited predecessors ok")
-  #endif
   VI unvisitedSuccessors;
   graph_->getUnvisitedSuccessors(path.back(), visited, &unvisitedSuccessors);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("graph get unvisited successors ok")
-  #endif
   if (unvisitedPredecessors.empty() && unvisitedSuccessors.empty()) {
-    #ifdef CIC__DEBUG_INFO
-      STR_L("both empty ret!")
-    #endif
     return;
   }
 
   bool ward = decideDirection(unvisitedSuccessors.empty(), unvisitedPredecessors.empty());
-  #ifdef CIC__DEBUG_INFO
-    STR_L("decideDirection ok")
-    STR_VAR_L(ward)
-  #endif
 
   /// TODO: consider class Searcher
   if (ward) {/// forward
     if (!bet(search_ratio_)) {
       memoForwardDFS(path, visited);
-      #ifdef CIC__DEBUG_INFO
-        STR_L("after memoForwardDFS")
-      #endif
     }
     forwardDFS(unvisitedSuccessors, path, visited);
   } else {/// backward
     if (!bet(search_ratio_)) {
       memoBackwardDFS(path, visited);
-      #ifdef CIC__DEBUG_INFO
-        STR_L("after memoBackwardDFS")
-      #endif
     }
     backwardDFS(unvisitedPredecessors, path, visited);
   }/// else backward
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish memoBiDFS")
-    const int finish_memoBiDFS_cnt = std::count(visited.begin(), visited.end(), 1);
-    STR_VAR_2_L(path.size(), finish_memoBiDFS_cnt)
-  #endif
 }/// SolverGene::memoBiDFS
 
 bool SolverGene::decideDirection(const bool forward_empty, const bool backward_empty) const {
@@ -217,9 +119,6 @@ bool SolverGene::decideDirection(const bool forward_empty, const bool backward_e
 }/// SolverGene::decideDirection
 
 void SolverGene::memoForwardDFS(LI& path, VI& visited) {
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start memoForwardDFS")
-  #endif
   const int back = path.back();
   if (false == (snippets_forward_->end2path_).count(back)) return;
   const auto& memo = (snippets_forward_->end2path_).at(back);
@@ -231,21 +130,20 @@ void SolverGene::memoForwardDFS(LI& path, VI& visited) {
     path.emplace_back(vertex);
     visited[vertex] = 1;
   }
+  const int size_actual_extend = index;
   memoBiDFS(path, visited);
+  /*const auto& memo2 = (snippets_forward_->end2path_).at(back);
   for (int i = 1; i <= index; ++i) {
     path.pop_back();
-    visited[memo[i]] = 0;
+    visited[memo2[i]] = 0;
+  }*/
+  for (int i = 0; i < size_actual_extend; ++i) {
+    const int vertex = path.back();
+    path.pop_back();
+    visited[vertex] = 0;
   }
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish memoForwardDFS")
-    const int visited_cnt = std::count(visited.begin(), visited.end(), 1);
-    STR_VAR_2_L(path.size(), visited_cnt)
-  #endif
 }/// SolverGene::memoForwardDFS
 void SolverGene::memoBackwardDFS(LI& path, VI& visited) {
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start memoBackwardDFS")
-  #endif
   const int front = path.front();
   if (false == (snippets_backward_->end2path_).count(front)) return;
   const auto& memo = (snippets_backward_->end2path_).at(front);
@@ -258,73 +156,41 @@ void SolverGene::memoBackwardDFS(LI& path, VI& visited) {
     path.emplace_front(vertex);
     visited[vertex] = 1;
   }
+  const int size_actual_extend = memo.size() - 1 -index;
   memoBiDFS(path, visited);
-  for (int i = memo.size() - 2; i >= index; --i) {
+  ///memo变化导致index失效
+  /*for (int i = memo.size() - 2; i >= index; --i) {
     path.pop_back();
     visited[memo[i]] = 0;
+  }*/
+  for (int i = 0; i < size_actual_extend; ++i) {
+    const int vertex = path.front();
+    path.pop_front();
+    visited[vertex] = 0;
   }
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish memoBackwardDFS")
-    const int visited_cnt = std::count(visited.begin(), visited.end(), 1);
-    STR_VAR_2_L(path.size(), visited_cnt)
-  #endif
 }/// SolverGene::memoBackwardDFS
 
 void SolverGene::forwardDFS(VI& successors, LI& path, VI& visited) {
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start forwardDFS")
-  #endif
   shuffle(successors);
   for (const auto succ : successors) {
-    #ifdef CIC__DEBUG_INFO
-      STR_L("start forwardDFS for successors")
-      STR_VAR_L(succ)
-    #endif
     if (visited[succ]) continue;/// shall check visited due to recovery_ratio_
-    #ifdef CIC__DEBUG_INFO
-      STR_L("not continue")
-    #endif
     path.emplace_back(succ);
     visited[succ] = 1;
     memoBiDFS(path, visited);
     path.pop_back();
     if (bet(recovery_ratio_)) visited[succ] = 0;
-    #ifdef CIC__DEBUG_INFO
-      STR_L("finish forwardDFS for successors")
-      STR_VAR_L(succ)
-    #endif
   }/// for
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish forwardDFS")
-  #endif
 }/// SolverGene::forwardDFS
 void SolverGene::backwardDFS(VI& predecessors, LI& path, VI& visited) {
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start backwardDFS")
-  #endif
   shuffle(predecessors);
   for (const auto pred : predecessors) {
-    #ifdef CIC__DEBUG_INFO
-      STR_L("start backwardDFS for predecessors")
-      STR_VAR_L(pred)
-    #endif
     if (visited[pred]) continue;
-    #ifdef CIC__DEBUG_INFO
-      STR_L("not continue")
-    #endif
     path.emplace_front(pred);
     visited[pred] = 1;
     memoBiDFS(path, visited);
     path.pop_front();
     if (bet(recovery_ratio_)) visited[pred] = 0;
-    #ifdef CIC__DEBUG_INFO
-      STR_L("finish backwardDFS for predecessors")
-      STR_VAR_L(pred)
-    #endif
   }/// for
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish backwardDFS")
-  #endif
 }/// SolverGene::backwardDFS
 
 void SolverGene::loadSeeds() {
@@ -353,13 +219,7 @@ void SolverGene::configSnippets(const int energy) {
 }/// SolverGene::configSnippets
 
 void SolverGene::cacheSeeds() {
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start cacheSeeds")
-  #endif
   seeds_->cache(SEEDS_DIR);
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish cacheSeeds")
-  #endif
 }/// SolverGene::cacheSeeds
 
 CIC__FUNC_SNIPPETS(load, Forward, forward, FORWARD)

@@ -9,9 +9,6 @@
 char d;\
 in.get(d);\
 const short size16 = composite16bits(c, d);\
-cout << "c: " << static_cast<int>(c) << "\n";\
-cout << "d: " << static_cast<int>(d) << "\n";\
-cout << "size16: " << size16 << "\n";\
 VI path;\
 path.reserve(size16);\
 for (int i = 0; i < size16; ++i) {\
@@ -52,10 +49,6 @@ bool Reader::loadGraph(const string& file, Graph* graph) {
   CIC__READ_JSON_START(file, graph, in, root)
   
   (graph->vertices_).clear();
-  #ifdef CIC__DEBUG_INFO
-    const int vertex_size = root["vertices"].size();
-    STR_VAR_L(vertex_size)
-  #endif
   (graph->vertices_).reserve(root["vertices"].size());
   for (const auto& vertex : root["vertices"]) {
     (graph->vertices_).push_back(vertex.asInt());
@@ -65,10 +58,6 @@ bool Reader::loadGraph(const string& file, Graph* graph) {
   (graph->successors_).clear();
   for (const auto& obj : root["predecessors"]) {
     const int cur = obj["cur"].asInt();
-    #ifdef CIC__DEBUG_INFO
-      const int pres_size = obj["pres"].size();
-      STR_VAR_L(pres_size)
-    #endif
     (graph->predecessors_)[cur].reserve(obj["pres"].size());
     for (const auto& pre : obj["pres"]) {
       const int p = pre.asInt();
@@ -124,18 +113,10 @@ bool Reader::loadSeed(const string& file, LI* community) {
 bool Reader::loadSnippetsForward(const string& file, MIVI* end2path) {
   CIC__READ_BIN_START(file, in)
 
-  #ifdef CIC__DEBUG_INFO
-    STR_L("start loadSnippetsForward")
-  #endif
-
   char c;
   while (in.get(c)) {
     CIC__GET_END2PATH(in, c, front)
   }/// while
-
-  #ifdef CIC__DEBUG_INFO
-    STR_L("finish loadSnippetsForward")
-  #endif
 
   CIC__READ_BIN_END(in)
 }/// Reader::loadSnippetsForward
