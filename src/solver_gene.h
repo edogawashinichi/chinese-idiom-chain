@@ -31,6 +31,9 @@ protected:
   float recovery_ratio_;
   float search_ratio_;
   int extension_size_;
+  int instant_ret_;
+protected:
+  int instantRet(const LI& path, const VI& visited);
 public:
   void configIterNum(const int num);
   void configRecoveryRatio(const float ratio);

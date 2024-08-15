@@ -4,7 +4,7 @@
 // SolverGene
 "solver_gene_iter_num": 30,
 "solver_gene_seeds_capacity": 8,
-"solver_gene_recovery_ratio": 0.9,
+"solver_gene_recovery_ratio": 0.97,
 "solver_gene_search_ratio": 0.3,
 "solver_gene_extension_size": 5,
 "solver_gene_snippets_energy": 8,

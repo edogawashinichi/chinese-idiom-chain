@@ -1,10 +1,13 @@
 # State of the Art
 
-| size |  start  |   end   |        file         |     mode     |     date    |
-| ---- | ------- | ------- | ------------------- | ------------ | ------------|
-| 9677 | 乐极则忧 | 期期艾艾 | 9677-result-four.txt |  length four |   20240726  |
-| 9627 | 泰极而否 | 邦国殄瘁 | 9627-result-four.txt |  length four |   20240713  |
-| 9474 | 手足异处 | 阵马风樯 | 9474-result-four.txt |  length four |   20240707  |
+| size |  start  |   end   |        file         |     date     |
+| ---- | ------- | ------- | ------------------- | ------------ |
+| 9693 | 自视甚高 | 德本财末 |  9693-solution.json  |   20240815  |
+| 9677 | 乐极则忧 | 期期艾艾 | 9677-result-four.txt |   20240726  |
+| 9627 | 泰极而否 | 邦国殄瘁 | 9627-result-four.txt |   20240713  |
+| 9474 | 手足异处 | 阵马风樯 | 9474-result-four.txt |   20240707  |
+
+The files are located in paths data/output/ and data/v0/
 
 # Background 背景
 

@@ -40,9 +40,9 @@ void SolverGene::runOnce() {
 
   LI path;
   VI visited(graph_->maxVertex() + 1, 0);
-  const int C = seeds_->capacity_ + 1;
+  const int C = 1.3 * seeds_->capacity_ + 1;
   const int index = randomChoose(idVec(C));
-  if (index != C - 1) {
+  if (index < seeds_->capacity_) {
     const int sz = (seeds_->communities_)[index]->size();
     if (sz != 0) {
       const auto pair = randomChooseSub(idVec(sz));
@@ -64,6 +64,7 @@ void SolverGene::runOnce() {
     visited[vertex] = 1;
   }
 
+  instant_ret_ = 0;
   memoBiDFS(path, visited);
   
   cacheSeeds();
@@ -72,8 +73,24 @@ void SolverGene::runOnce() {
 
 }/// SolverGene::runOnce
 
+int SolverGene::instantRet(const LI& path, const VI& visited) {
+  const int visited_cnt = count(visited.begin(), visited.end(), 1);
+  const int size_upper_bound = path.size() + graph_->order() - visited_cnt;
+  if (size_upper_bound < best_path_.size()) {
+    instant_ret_ = 1;
+    return 1;
+  }
+  const float ratio = 0.01f;
+  if (path.size() < best_path_.size() * (1 - ratio) && visited_cnt > best_path_.size() * (1 + 30 * ratio)) {
+    instant_ret_ = 1;
+    return 1;
+  }
+  return instant_ret_;
+}/// SolverGene::instantRet
+
 void SolverGene::memoBiDFS(LI& path, VI& visited) {
   /// condition -> immediately return from recursive stack
+  if (instant_ret_ || instantRet(path, visited)) return;
 
     const int visited_cnt = std::count(visited.begin(), visited.end(), 1);
     STR_VAR_2_L(path.size(), visited_cnt)
