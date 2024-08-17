@@ -1,11 +1,12 @@
 # State of the Art
 
-| size |  start  |   end   |        file         |     date     |
-| ---- | ------- | ------- | ------------------- | ------------ |
-| 9693 | 自视甚高 | 德本财末 |  9693-solution.json  |   20240815  |
-| 9677 | 乐极则忧 | 期期艾艾 | 9677-result-four.txt |   20240726  |
-| 9627 | 泰极而否 | 邦国殄瘁 | 9627-result-four.txt |   20240713  |
-| 9474 | 手足异处 | 阵马风樯 | 9474-result-four.txt |   20240707  |
+| size |  start  |   end   |        file         |     date     | version |
+| ---- | ------- | ------- | ------------------- | ------------ | ------- |
+| 9729 | 三老五更 | 瓦解土崩 |  9729-solution.json  |   20240817  |    v1    |
+| 9693 | 自视甚高 | 德本财末 |  9693-solution.json  |   20240815  |    v1    |
+| 9677 | 乐极则忧 | 期期艾艾 | 9677-result-four.txt |   20240726  |    v0    |
+| 9627 | 泰极而否 | 邦国殄瘁 | 9627-result-four.txt |   20240713  |    v0    |
+| 9474 | 手足异处 | 阵马风樯 | 9474-result-four.txt |   20240707  |    v0    |
 
 The files are located in paths data/output/ and data/v0/
 
@@ -65,7 +66,19 @@ Rebuild and run chain.cpp using a C++ compiler or IDE say Visual Studio
 
 # Description of Files 各个文件说明
 
-## result.txt
+## Output 输出
+
+### data/output/solution.json
+
+output of v1
+
+contains 2 fields:
+chain - namely the longest Chinese idiom chain the program has found
+size - the length of the chain
+
+### data/v0/result.txt
+
+output of v0
 
 Output including 2 lines:  
 1th line is the size of the chain  
@@ -74,7 +87,24 @@ Output including 2 lines:
 第一行是长度  
 第二行是结果  
 
-## config.json
+## Configuration 配置
+
+### data/input/config.json
+
+configuration of v1
+
+explanation of some fields:
+solver_naive_iter_num - iterative number of naive solver
+solver_gene_iter_num - iterative number of gene solver
+solver_gene_seeds_capacity - seeds number of gene solver
+solver_gene_recovery_ratio - recovery ratio of gene solver
+solver_gene_search_ratio - search ratio of gene solver
+solver_gene_extension_size - extension size of gene solver
+solver_gene_snippets_energy - snippet size of gene solver
+
+### data/v0/config.json
+
+configuration of v0
 
 Configuration supporting 4 modes:  
 0 - original mode, including all idioms(30895 vertices)  
@@ -90,7 +120,15 @@ Configuration supporting 4 modes:
 For other fields, refer to the variable names and specific codes.  
 其他字段参考变量名称与具体代码。  
 
-## validate.py
+## Validate 验证
+
+### script/validate_v1.py
+
+validation of v1
+
+### script/validate_v0.py
+
+validation of v0
 
 Validation script to check whether result.txt is valid or not.  
 验证脚本，检查result.txt是否是合法的成语接龙。
@@ -101,47 +139,63 @@ For Linux/MacOS, execute in terminal
 python validate.py result.txt
 ```
 
-## chain.cpp
+## Specification of the Rest File of v1
+
+### src/
+
+source files
+
+### obj/
+
+objective files
+
+### data/
+
+all data files including input, output, cache
+
+## Specification of the Rest Files of v0
+
+### chain.cpp
 
 Source code file in C++  
 求解源文件
 
-## chain.o
+### chain.o
 
 Execution file after compiling (Linux/MacOS)  
 编译后的可执行文件
 
-## cache.txt
+### cache.txt
 
 Cache file that stores local results, which is large therefore is not uploaded here, but has no influence running the project, because users can generate your own cache.txt locally.  
 缓存局部结果的文件，太大并未上传至此，不影响项目运行，本地可生成自己的cache.txt
 
-## 174-result-digit.txt
+### 174-result-digit.txt
 
 One result of 2 - digit mode  
 数字模式的一个运行结果
 
-## 9132-result-four.txt
+### 9132-result-four.txt
 
 One result of 1 - length four mode  
 四字模式的一个运行结果
 
-## 9260-result-original.txt
+### 9260-result-original.txt
 
 One result of 0 - original mode  
 原始模式的一个运行结果
 
-## 9474-result-four.txt
+### 9474-result-four.txt
 
 One result of 1 - length four mode  
 四字模式的一个运行结果
 
-## 9627-result-four.txt
+### 9627-result-four.txt
 
 One result of 1 - lenght four mode  
 四字模式的一个运行结果
 
-## 9677-result-four.txt
+### 9677-result-four.txt
 
 Best result of 1 - lenght four mode  
 四字模式的最好结果
