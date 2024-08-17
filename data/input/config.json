@@ -2,7 +2,7 @@
 // SolverNaive
 "solver_naive_iter_num": 10000,
 // SolverGene
-"solver_gene_iter_num": 30,
+"solver_gene_iter_num": 1,
 "solver_gene_seeds_capacity": 8,
 "solver_gene_recovery_ratio": 0.97,
 "solver_gene_search_ratio": 0.3,

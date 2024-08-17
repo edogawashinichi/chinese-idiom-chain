@@ -80,8 +80,8 @@ int SolverGene::instantRet(const LI& path, const VI& visited) {
     instant_ret_ = 1;
     return 1;
   }
-  const float ratio = 0.01f;
-  if (path.size() < best_path_.size() * (1 - ratio) && visited_cnt > best_path_.size() * (1 + 30 * ratio)) {
+  const float ratio = 0.005f;
+  if (path.size() < best_path_.size() * (1 - ratio) && visited_cnt > best_path_.size() * (1 + 60 * ratio)) {
     instant_ret_ = 1;
     return 1;
   }
