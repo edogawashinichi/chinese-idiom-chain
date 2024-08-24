@@ -55,7 +55,7 @@ protected:
   void loadSnippetsBackward();
   void cacheSnippetsForward();
   void cacheSnippetsBackward();
-  void updateSnippets(const LI& path);
+  void updateSnippets();
 public:
   void configSnippets(const int energy);
 };/// class SolverGene

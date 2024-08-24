@@ -14,7 +14,7 @@ public:
 public:
   virtual void load(const string& file) = 0;
   void cache(const string& file);
-  virtual void update(const LI& path) = 0;
+  virtual void update(const TLI path) = 0;
 };/// class Pool
 
 }/// namespace ChineseIdiomChain

@@ -139,11 +139,22 @@ void sharpen(VI& v) {
   transform(v.begin(), v.end(), v.begin(), [&](const int i){ return static_cast<int>(static_cast<float>(i) * i / max_val + 1); });
 }/// sharpen
 
+void sharpenPow(VI& v) {
+  const int max_val = *(max_element(v.begin(), v.end()));
+  transform(v.begin(), v.end(), v.begin(), [&](const int i){ return static_cast<int>(pow(static_cast<float>(i)/max_val, max_val-i))*i + 1; });
+}/// sharpenPow
+
 void inverseSharpen(VI& v) {
   const int max_val = *(max_element(v.begin(), v.end()));
   const int min_val = *(min_element(v.begin(), v.end()));
   transform(v.begin(), v.end(), v.begin(), [&](const int i){ const float j = max_val + min_val - i; return static_cast<int>(j * j / min_val + 1); });
 }/// inverseSharpen
+
+void inverseSharpenPow(VI& v) {
+  const int max_val = *(max_element(v.begin(), v.end()));
+  const int min_val = *(min_element(v.begin(), v.end()));
+  transform(v.begin(), v.end(), v.begin(), [&](const int i){ const float j = max_val + min_val - i; return static_cast<int>(pow(j/max_val, max_val-j)*j) + 1; });
+}/// inverseSharpenPow
 
 bool bet(const float probability) {
   const int N = 10000;

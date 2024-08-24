@@ -11,8 +11,8 @@ void PoolBackward::load(const string& file) {
   reader.loadSnippetsBackward(file, &end2path_);
 }/// PoolBackward::load
 
-void PoolBackward::update(const LI& path) {
-  const VI vec(path.begin(), path.end());
+void PoolBackward::update(const TLI path) {
+  const VI vec(path->begin(), path->end());
   const int min_index = energy_ - 1;
   if (min_index < 0 || min_index >= vec.size()) return;
   const int last_index = randomChoose(vec, min_index, vec.size() - 1);

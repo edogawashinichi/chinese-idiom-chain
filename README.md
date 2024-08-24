@@ -73,8 +73,8 @@ Rebuild and run chain.cpp using a C++ compiler or IDE say Visual Studio
 output of v1
 
 contains 2 fields:
-chain - namely the longest Chinese idiom chain the program has found
-size - the length of the chain
+chain - namely the longest Chinese idiom chain the program has found  
+size - the length of the chain  
 
 ### data/v0/result.txt
 
@@ -94,13 +94,13 @@ Output including 2 lines:
 configuration of v1
 
 explanation of some fields:
-solver_naive_iter_num - iterative number of naive solver
-solver_gene_iter_num - iterative number of gene solver
-solver_gene_seeds_capacity - seeds number of gene solver
-solver_gene_recovery_ratio - recovery ratio of gene solver
-solver_gene_search_ratio - search ratio of gene solver
-solver_gene_extension_size - extension size of gene solver
-solver_gene_snippets_energy - snippet size of gene solver
+solver_naive_iter_num - iterative number of naive solver  
+solver_gene_iter_num - iterative number of gene solver  
+solver_gene_seeds_capacity - seeds number of gene solver  
+solver_gene_recovery_ratio - recovery ratio of gene solver  
+solver_gene_search_ratio - search ratio of gene solver  
+solver_gene_extension_size - extension size of gene solver  
+solver_gene_snippets_energy - snippet size of gene solver  
 
 ### data/v0/config.json
 

@@ -9,7 +9,7 @@ namespace ChineseIdiomChain {
 class PoolBackward : public Pool {
 public:
   virtual void load(const string& file) override;
-  virtual void update(const LI& path) override;
+  virtual void update(const TLI path) override;
 };/// class PoolBackward
 
 }/// namespace ChineseIdiomChain

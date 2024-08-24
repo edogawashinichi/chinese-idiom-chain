@@ -38,18 +38,20 @@ function getFileSize() {
   # $? return value mod 256
 }
 function keepLargerFile() {
-  file_a=$1
-  file_a_size=$(getFileSize $1)
-  file_b=$2
-  file_b_size=$(getFileSize $2)
-  echo "keepLargerFile: ${file_a} size ${file_a_size}"
-  echo "keepLargerFile: ${file_b} size ${file_b_size}"
-  if [ ${file_a_size} -gt ${file_b_size} ]; then
-    cp ${file_a} ${file_b}
-    echo "keep ${file_a}"
-  elif [ ${file_a_size} -lt ${file_b_size} ]; then
-    cp ${file_b} ${file_a}
-    echo "keep ${file_b}"
+  file=$1
+  file_size=$(getFileSize $1)
+  cp_file=$2
+  cp_file_size=$(getFileSize $2)
+  ratio=0.95
+  cp_file_size_discount=$(echo "scale=2;${ratio}*${cp_file_size}"|bc)
+  echo "keepLargerFile: ${file} size ${file_size}"
+  echo "keepLargerFile: ${cp_file} size ${cp_file_size_discount}"
+  if [ `echo "${cp_file_size_discount} < ${file_size}" | bc` -eq 1 ]; then
+    cp ${file} ${cp_file}
+    echo "keep ${file}"
+  elif [ `echo "${cp_file_size_discount} > ${file_size}" | bc` -eq 1 ]; then
+    cp ${cp_file} ${file}
+    echo "keep ${cp_file}"
   fi
 }
 

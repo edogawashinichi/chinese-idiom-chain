@@ -11,8 +11,8 @@ void PoolForward::load(const string& file) {
   reader.loadSnippetsForward(file, &end2path_);
 }/// PoolForward::load
 
-void PoolForward::update(const LI& path) {
-  const VI vec(path.begin(), path.end());
+void PoolForward::update(const TLI path) {
+  const VI vec(path->begin(), path->end());
   const int max_index = vec.size() - energy_;
   if (max_index < 0 || max_index >= vec.size()) return;
   const int start_index = randomChoose(vec, 0, max_index);

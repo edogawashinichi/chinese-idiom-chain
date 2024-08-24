@@ -54,7 +54,9 @@ int randomChoose(const VI& frequency, const int min_index, const int max_index);
 void shuffle(VI& v);
 void inverse(VI& v);
 void sharpen(VI& v);
+void sharpenPow(VI& v);
 void inverseSharpen(VI& v);
+void inverseSharpenPow(VI& v);
 
 /// bet
 

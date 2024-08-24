@@ -69,7 +69,7 @@ void SolverGene::runOnce() {
   
   cacheSeeds();
   cacheSnippetsForward();
-  cacheSnippetsBackward(); 
+  cacheSnippetsBackward();
 
 }/// SolverGene::runOnce
 
@@ -97,7 +97,7 @@ void SolverGene::memoBiDFS(LI& path, VI& visited) {
 
   updateSolution(path);
   updateSeeds(path);
-  updateSnippets(path);
+  updateSnippets();
 
   VI unvisitedPredecessors;
   graph_->getUnvisitedPredecessors(path.front(), visited, &unvisitedPredecessors);
@@ -213,6 +213,7 @@ void SolverGene::backwardDFS(VI& predecessors, LI& path, VI& visited) {
 void SolverGene::loadSeeds() {
   seeds_->init();
   seeds_->load(SEEDS_DIR);
+  seeds_->worship(best_path_.vertices_);
 }/// SolverGene::loadSeeds
 
 void SolverGene::configIterNum(const int num) {
@@ -250,13 +251,14 @@ void SolverGene::updateSeeds(const LI& path) {
   for (int i = 0; i < freq.size(); ++i) {
     freq[i] = (seeds_->communities_[i])->size() + 1;/// cannot transform unique_ptr
   }
-  inverseSharpen(freq);
+  inverseSharpenPow(freq);
   const int index = randomChoose(freq);
   *((seeds_->communities_)[index]) = path;
 }/// SolverGene::updateSeeds
 
-void SolverGene::updateSnippets(const LI& path) {
-  snippets_forward_->update(path);
-  snippets_backward_->update(path);
+void SolverGene::updateSnippets() {
+  const int choice = randomChoose(seeds_->capacity_);
+  snippets_forward_->update(seeds_->communities_[choice].get());
+  snippets_backward_->update(seeds_->communities_[choice].get());
 }/// SolverGene::updateSnippets
 }/// namespace ChineseIdiomChain

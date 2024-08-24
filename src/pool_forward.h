@@ -7,7 +7,7 @@ namespace ChineseIdiomChain {
 class PoolForward : public Pool {
 public:
   virtual void load(const string& file) override;
-  virtual void update(const LI& path) override;
+  virtual void update(const TLI path) override;
 };/// class PoolForward
 
 }/// namespace ChineseIdiomChain
