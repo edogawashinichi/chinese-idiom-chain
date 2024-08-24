@@ -22,7 +22,7 @@ void PoolForward::update(const LI& path) {
     return;
   }
   const VI& memo = end2path_.at(start_vertex);
-  if (sharpenBet(vec.size() - start_index, memo.size())) {
+  if (betSharpenPow(vec.size() - start_index, memo.size())) {
     end2path_[start_vertex] = VI(vec.begin() + start_index, vec.end());
   }
 }/// PoolForward::update

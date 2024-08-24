@@ -41,11 +41,11 @@ void SolverGene::runOnce() {
   LI path;
   VI visited(graph_->maxVertex() + 1, 0);
   const int C = 1.3 * seeds_->capacity_ + 1;
-  const int index = randomChoose(idVec(C));
+  const int index = randomChoose(C);
   if (index < seeds_->capacity_) {
     const int sz = (seeds_->communities_)[index]->size();
     if (sz != 0) {
-      const auto pair = randomChooseSub(idVec(sz));
+      const auto pair = randomChooseInterval(sz);
       LI::iterator it_start = (seeds_->communities_)[index]->begin();
       std::advance(it_start, pair.first);
       LI::iterator it_end = (seeds_->communities_)[index]->begin();
@@ -81,7 +81,7 @@ int SolverGene::instantRet(const LI& path, const VI& visited) {
     return 1;
   }
   const float ratio = 0.005f;
-  if (path.size() < best_path_.size() * (1 - ratio) && visited_cnt > best_path_.size() * (1 + 60 * ratio)) {
+  if (path.size() < best_path_.size() * (1 - ratio) && visited_cnt > best_path_.size() * (1 + 40 * ratio)) {
     instant_ret_ = 1;
     return 1;
   }
@@ -141,7 +141,7 @@ void SolverGene::memoForwardDFS(LI& path, VI& visited) {
   const auto& memo = (snippets_forward_->end2path_).at(back);
   const int max_unique_index = Path(path).getForwardMaxUniqueIndex(memo, visited);
   if (max_unique_index < extension_size_) return;
-  const int index = randomChoose(memo, extension_size_, max_unique_index);
+  const int index = randomChoose(extension_size_, max_unique_index);
   for (int i = 1; i <= index; ++i) {
     const int vertex = memo[i];
     path.emplace_back(vertex);
@@ -167,7 +167,7 @@ void SolverGene::memoBackwardDFS(LI& path, VI& visited) {
   const int min_unique_index = Path(path).getBackwardMinUniqueIndex(memo, visited);
   const int max_extension_size = memo.size() - 1 - min_unique_index;
   if (max_extension_size < extension_size_) return;
-  const int index = randomChoose(memo, min_unique_index, memo.size() - 2);
+  const int index = randomChoose(min_unique_index, memo.size() - 2);
   for (int i = memo.size() - 2; i >= index; --i) {
     const int vertex = memo[i];
     path.emplace_front(vertex);
@@ -246,13 +246,12 @@ CIC__FUNC_SNIPPETS(cache, Backward, backward, BACKWARD)
 
 void SolverGene::updateSeeds(const LI& path) {
   const int N = seeds_->capacity_;
-  const VI vec(idVec(N));
   VI freq(N, 0);
   for (int i = 0; i < freq.size(); ++i) {
     freq[i] = (seeds_->communities_[i])->size() + 1;/// cannot transform unique_ptr
   }
   inverseSharpen(freq);
-  const int index = randomChoose(vec, freq);
+  const int index = randomChoose(freq);
   *((seeds_->communities_)[index]) = path;
 }/// SolverGene::updateSeeds
 

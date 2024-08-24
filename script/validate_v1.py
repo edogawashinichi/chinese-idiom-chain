@@ -37,6 +37,6 @@ if __name__ == "__main__":
   path = "../data/output/"
   fname = sys.argv[1] if len(sys.argv) > 1 else "solution.json"
   if validate(path+fname):
-    print("verification passed!")
+    print("verification \033[32mpassed\033[0m!")
   else:
-    print("verification failed!")
+    print("verification \033[31mfailed\033[0m!")

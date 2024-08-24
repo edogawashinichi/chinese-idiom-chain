@@ -5,6 +5,7 @@
 #include <functional> /// fix std::generate problem only for C++17 
 #include <numeric>
 #include <random>
+#include <cmath>
 
 #define CIC__RAND_ENV(rng) \
 std::random_device rd;\
@@ -19,6 +20,7 @@ namespace ChineseIdiomChain {
 
 using std::generate;
 using std::transform;
+using std::pow;
 
 void split16bits(const short bits16, char& high8, char& low8) {
   high8 = static_cast<char>(bits16 >> 8);
@@ -61,27 +63,35 @@ int randomChoose(const int n) {
   return res;
 }
 
-int randomChoose(const VI& vec) {
-  VI freq(vec.size(), 1);
-  return randomChoose(vec, freq);
-}/// randomChoose
-
-PII randomChooseSub(const VI& vec) {
+PII randomChooseInterval(const VI& vec) {
   const int sum = vec.size() * vec.size();
   CIC__DISTR_ENV(sum, res)
   const int a = res / vec.size();
   const int b = res % vec.size();
   if (a < b) return PII({a, b});
   return PII({b, a});
-}/// randomChooseSub
+}/// randomChooseInterval
 
-int randomChoose(const VI& vec, const int min_index, const int max_index) {
-  VI freq(vec.size(), 1);
-  return randomChoose(vec, freq, min_index, max_index);
+PII randomChooseInterval(const int n) {
+  const int sum = n * n;
+  CIC__DISTR_ENV(sum, res)
+  const int a = res / n;
+  const int b = res % n;
+  if (a < b) return PII({a, b});
+  return PII({b, a});
+}/// randomChooseInterval
+
+int randomChoose(const int min_index, const int max_index) {
+  const int sum = max_index - min_index + 1;
+  return randomChoose(sum) + min_index;
 }/// randomChoose
 
 int randomChoose(const VI& vec, const VI& freq) {
   return randomChoose(vec, freq, 0, vec.size() - 1);
+}/// randomChoose
+
+int randomChoose(const VI& frequency) {
+  return randomChoose(frequency, 0, frequency.size() - 1);
 }/// randomChoose
 
 int randomChoose(const VI& vec, const VI& freq, const int min_index, const int max_index) {
@@ -95,6 +105,21 @@ int randomChoose(const VI& vec, const VI& freq, const int min_index, const int m
     prev_sum += freq[index];
     if (res < prev_sum) break;
   }
+  return index;
+}/// randomChoose
+
+int randomChoose(const VI& frequency, const int min_index, const int max_index) {
+  /// if (min_index < 0 || max_index >= frequency.size()) return -1;
+  const int sum = accumulate(frequency.begin() + min_index, frequency.begin() + max_index + 1, 0);
+  ///if (sum < 1) return -1;
+
+  CIC__DISTR_ENV(sum, res)
+
+  int index = min_index, prev_sum = 0;
+  for (; index <= max_index; ++index) {
+    prev_sum += frequency[index];
+    if (res < prev_sum) break;
+  }/// for
   return index;
 }/// randomChoose
 
@@ -127,8 +152,29 @@ bool bet(const float probability) {
   return 0 == randomChoose({0, 1}, {f0, f1});
 }/// bet
 
-bool sharpenBet(const int x, const int y) {
-  return 0 == randomChoose({0, 1}, {x, static_cast<int>(static_cast<float>(y) * y / x)});
-}/// bet
+bool betSharpenSquare(const int a, const int b) {
+  if (0 == b) return true;
+  if (0 == a) return false;
+  if (a > b) {
+    return 0 == randomChoose({a, static_cast<int>(static_cast<float>(b) * b / a)});
+  }
+  return 0 == randomChoose({static_cast<int>(static_cast<float>(a) * a / b), b});
+}/// betSharpenSquare
+
+bool betSharpenCube(const int a, const int b) {
+  if (0 == b) return true;
+  if (0 == a) return false;
+  if (a > b) {
+    return 0 == randomChoose({a, static_cast<int>(static_cast<float>(b) * b * b / a / a)});
+  return 0 == randomChoose({static_cast<int>(static_cast<float>(a) * a * a / b / b), b});
+  }
+}/// betSharpenCube
+
+bool betSharpenPow(const int a, const int b) {
+  const int delta = a > b ? a - b : b - a;
+  const double pa = pow(a, delta);
+  const double pb = pow(b, delta);
+  return bet(static_cast<float>(pa / (pa + pb)));
+}/// betSharpenPow
 
 }/// namespace ChineseIdiomChain
